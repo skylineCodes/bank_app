@@ -10,7 +10,7 @@ import (
 
 // Store defines all functions to execute db queries and transactions
 type Store interface {
-	// Querier
+	Querier
 	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
 	// CreateUserTx(ctx context.Context, arg CreateUserTxParams) (CreateUserTxResult, error)
 	// VerifyEmailTx(ctx context.Context, arg VerifyEmailTxParams) (VerifyEmailTxResult, error)
@@ -23,7 +23,7 @@ type SQLStore struct {
 }
 
 // NewStore creates a new Store
-func NewStore(connPool *pgxpool.Pool) *SQLStore {
+func NewStore(connPool *pgxpool.Pool) Store {
   return &SQLStore{
     connPool: connPool,
     Queries: New(connPool),

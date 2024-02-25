@@ -8,23 +8,25 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/lib/pq"
+	"github.com/skylineCodes/bank_app/util"
 )
 
-const (
-  dbDriver = "postgres"
-  dbSource = "postgresql://root:simplebankgolang@localhost:5432/simple_bank?sslmode=disable"
-)
-
-var testStore SQLStore
+var testStore Store
 
 func TestMain(m *testing.M) {
-	connPool, err := pgxpool.New(context.Background(), dbSource)
+  config, err := util.LoadConfig("../..")
+
+	if err != nil {
+		log.Fatal("Cannot load config:", err)
+	}
+  
+  connPool, err := pgxpool.New(context.Background(), config.DBSource)
 
   if err != nil {
     log.Fatal("Cannot connect to db:", err)
   }
 
-  testStore = *NewStore(connPool)
+  testStore = NewStore(connPool)
 
   os.Exit(m.Run())
 }
